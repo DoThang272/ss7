@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import re.ss7.dto.request.CandidateCreateRequest;
+import re.ss7.dto.respose.ApiResponse;
 import re.ss7.dto.respose.CandidateResponse;
 import re.ss7.service.CandidateService;
 
@@ -18,10 +19,17 @@ import re.ss7.service.CandidateService;
 public class CandidateController {
     private final CandidateService candidateService;
     @PostMapping
-    public ResponseEntity<CandidateResponse> createCandidate(
+    public ResponseEntity<ApiResponse<CandidateResponse>> createCandidate(
             @Valid @RequestBody CandidateCreateRequest request
     ) {
         CandidateResponse response = candidateService.createCandidate(request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+        ApiResponse<CandidateResponse> apiResponse = ApiResponse.<CandidateResponse>builder()
+                .status("SUCCESS")
+                .message("Candidate created successfully")
+                .data(response)
+                .build();
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
     }
 }
